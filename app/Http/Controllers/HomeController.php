@@ -45,7 +45,7 @@ class HomeController extends Controller
                 $isUsers->google2fa_secret
             );
             
-            return view('qr', ['QR_Image' => $QR_Image, 'secret' => $isUsers->google2fa_secret]);     
+            return view('google2fa.index', ['QR_Image' => $QR_Image, 'secret' => $isUsers->google2fa_secret]);     
         }
         else{
             return view('dashboard'); 

@@ -17,14 +17,23 @@
   
                 <div class="panel-body">
                 <p>Please scan this QR Code For Login With Google Authenticator App.</p>
+                <div class="col-md-8">
+                <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" class="">
+                    <img src="/playstore.png"/>
+                </a>
+                <a target="_blank" href="https://apps.apple.com/us/app/google-authenticator/id388497605" class="">
+                    <img src="/appstore.png"/>
+                </a>
+                </div>
                 {!! $QR_Image !!}
                 </div>
                 <div>
-                        <a href="{{ route('verify') }}" class=""><button class="btn btn-primary" type="button">Login With 2fa</button></a>
-                    </div>
+                    <a href="{{ route('verify') }}" class=""><button class="btn btn-primary" type="button">Login With Google Authenticator</button></a>
+                    
+                </div>
                 <br>
                 <strong>OR</strong>
-                <div class="card-body">
+                <div class="card-body col-md-6">
                     <form method="POST" action="{{ route('otp.generate') }}">
                         @csrf
                         <br><br>
@@ -41,7 +50,7 @@
                             </div>
 							
 							<br>
-							<button type="submit" class="btn btn-primary">Generate OTP</button>
+							<button type="submit" class="btn btn-primary">Send OTP</button>
                         
                     </form>
                 </div>
