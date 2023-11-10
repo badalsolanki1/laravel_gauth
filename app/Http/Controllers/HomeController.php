@@ -24,8 +24,8 @@ class HomeController extends Controller
     public function index(Request $request)
     {   
         $isUsers = \Auth::user();  
-
-        $userSetting = DB::table('settings')->where('user_id',  $isUsers->id)->first();
+        $user_id = $isUsers->id;
+        $userSetting = DB::table('settings')->where('user_id', $user_id)->first();
 
         if(isset($userSetting) && $userSetting->verify_status == '1')
         {
@@ -34,18 +34,26 @@ class HomeController extends Controller
             $google2fa = app('pragmarx.google2fa');
     
             $registration_data = $request->all();
-    
-            $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
+            
+            if($isUsers->google2fa_secret == '')
+            {
+                $google2fa_secret = $google2fa->generateSecretKey();
+                $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();  
+                DB::update('update users set google2fa_secret = "'.$google2fa_secret.'" where id = ?', [$user_id]);              
+            }           
+            else{
+                $google2fa_secret =  $isUsers->google2fa_secret;
+            }
     
             $request->session()->flash('registration_data', $registration_data);
     
             $QR_Image = $google2fa->getQRCodeInline(
                 config('app.name'),
                 $isUsers->email,
-                $isUsers->google2fa_secret
-            );
+                $google2fa_secret
+            );            
             
-            return view('google2fa.index', ['QR_Image' => $QR_Image, 'secret' => $isUsers->google2fa_secret]);     
+            return view('google2fa.index', ['QR_Image' => $QR_Image, 'secret' => $google2fa_secret]);     
         }
         else{
             return view('dashboard'); 
